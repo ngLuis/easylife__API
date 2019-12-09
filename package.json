@@ -1,0 +1,13 @@
+{
+  "name": "proyecto_servidor",
+  "version": "1.0.0",
+  "description": "proyecto servidor",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "sh ./scripts/build.sh",
+    "deploy": "npm run build && sh ./scripts/deploy.sh"
+  },
+  "author": "",
+  "license": "ISC"
+}
