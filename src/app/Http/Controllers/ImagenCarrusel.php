@@ -11,14 +11,20 @@ class ImagenCarrusel extends Controller
 
     public static function getImagenes(){
 
-        $response = [];
+        $data = ImagenesCarrusel::all();
+        $status = 404;
+        $code = 'Images Not Found';
 
-        array_push($response, ["data" => ImagenesCarrusel::all()]);
-        array_push($response, ["code" => "Success"]);
-        array_push($response, ["status" => 200]);
+        if ( count($data) !== 0 ) {
+            $status = 200;
+            $code = 'Success';
+        }
 
-
-        return $response;
+        return response()->json([
+            "data" => $data,
+            "code" => $code,
+            "status" => $status
+        ]);
     }
 
     public static function postImagen(Request $request){

@@ -1,3 +1,8 @@
+
+-- -----------------------------------------------------
+-- Schema dbeasylife
+-- -----------------------------------------------------
+
 -- -----------------------------------------------------
 -- Schema dbeasylife
 -- -----------------------------------------------------
@@ -17,37 +22,20 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `dbeasylife`.`Subcategorias`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `dbeasylife`.`Subcategorias` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `nombre` VARCHAR(45) NOT NULL,
-  `idCategoria` INT NULL,
-  PRIMARY KEY (`id`),
-  INDEX `fk1_subcategorias_idx` (`idCategoria` ASC),
-  CONSTRAINT `fk1_subcategorias`
-    FOREIGN KEY (`idCategoria`)
-    REFERENCES `dbeasylife`.`Categorias` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
 -- Table `dbeasylife`.`Servicios`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `dbeasylife`.`Servicios` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `nombre` VARCHAR(45) NOT NULL,
-  `idSubcategoria` INT NULL,
-  `precio` DECIMAL(4,2) NOT NULL,
+  `idCategoria` INT NULL,
+  `precio` DECIMAL(5,2) NOT NULL,
   `imagen` VARCHAR(255) NULL,
   `descripcion` TEXT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk1_servicios_idx` (`idSubcategoria` ASC),
+  INDEX `fk1_servicios_idx` (`idCategoria` ASC),
   CONSTRAINT `fk1_servicios`
-    FOREIGN KEY (`idSubcategoria`)
-    REFERENCES `dbeasylife`.`Subcategorias` (`id`)
+    FOREIGN KEY (`idCategoria`)
+    REFERENCES `dbeasylife`.`Categorias` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;

@@ -17,14 +17,14 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/categorias', 'Categoria@getCategorias');
+Route::get('/categoria', 'Categoria@getCategorias');
 
-Route::post('/categorias', 'Categoria@postCategoria');
+Route::post('/categoria', 'Categoria@postCategoria');
 
-Route::get('/{idCategoria}/subcategorias', 'Subcategoria@getSubcategorias');
+Route::get('/categoria/{idCategoria}/servicio', 'Categoria@getServicios');
 
-Route::post('/{idCategoria}/subcategorias', 'Subcategoria@postSubcategoria');
+Route::get('/categoria/{idCategoria}', 'Categoria@getCategoria');
 
-Route::get('/imagenesCarrusel', 'ImagenCarrusel@getImagenes');
+Route::get('/carrusel', 'ImagenCarrusel@getImagenes');
 
-Route::post('/imagenesCarrusel', 'ImagenCarrusel@postImagen');
+Route::post('/carrusel', 'ImagenCarrusel@postImagen');
