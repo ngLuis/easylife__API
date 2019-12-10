@@ -16,3 +16,15 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::get('/categorias', 'Categoria@getCategorias');
+
+Route::post('/categorias', 'Categoria@postCategoria');
+
+Route::get('/{idCategoria}/subcategorias', 'Subcategoria@getSubcategorias');
+
+Route::post('/{idCategoria}/subcategorias', 'Subcategoria@postSubcategoria');
+
+Route::get('/imagenesCarrusel', 'ImagenCarrusel@getImagenes');
+
+Route::post('/imagenesCarrusel', 'ImagenCarrusel@postImagen');
