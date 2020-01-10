@@ -293,6 +293,10 @@ class Kernel implements KernelContract
      * @param  string  $group
      * @param  string  $middleware
      * @return $this
+     *
+     * @throws \InvalidArgumentException
+
+
      */
     public function prependMiddlewareToGroup($group, $middleware)
     {
@@ -315,6 +319,10 @@ class Kernel implements KernelContract
      * @param  string  $group
      * @param  string  $middleware
      * @return $this
+
+     *
+     * @throws \InvalidArgumentException
+
      */
     public function appendMiddlewareToGroup($group, $middleware)
     {

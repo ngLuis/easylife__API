@@ -25,3 +25,15 @@ Route::get('/categoria/{idCategoria}/servicio', 'CategoriasController@getServici
 Route::get('/carrusel', 'ImagenCarrusel@getImagenes');
 
 Route::post('/carrusel', 'ImagenCarrusel@postImagen');
+
+
+
+Route::group([
+    'prefix' => 'auth',
+], function () {
+    Route::post('login', 'AuthController@login');
+    Route::post('logout', 'AuthController@logout');
+    Route::post('refresh', 'AuthController@refresh');
+    Route::post('me', 'AuthController@me');
+});
+

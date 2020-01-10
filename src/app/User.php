@@ -1,14 +1,15 @@
 <?php
 
 namespace App;
-
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable
+class User extends Authenticatable implements JWTSubject
 {
     use Notifiable;
+
+    protected $table ='users';
 
     /**
      * The attributes that are mass assignable.
@@ -16,7 +17,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'acreditation', 'password', 'address', 'dni', 'id', 'image', 'name', 'mobilephone', 'email', 'type'
     ];
 
     /**
@@ -36,4 +37,13 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+     public function getJWTCustomClaims()
+    {
+        return [];
+    }
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
 }
