@@ -21,7 +21,7 @@ VALUES
 
 /* -------------------------------- Tabla Servicios -------------------------------- */
 INSERT INTO servicios
-    (id, nombre, idCategoria, precio, imagen, descripcion)
+    (id, nombre, categoria_id, precio, imagen, descripcion)
 VALUES
     /* ------ Servicios de la categoria 1: ocio ------ */
     (1, 'Excursiones', 1, 50, 'excursiones.jpg', 'Excursiones y salidas grupales a diferentes lugares emblemáticos del territorio español, en las que se incluye alojamiento a pensión completa y diversas actividades de entretenimiento tales como visitas guiadas o espectáculos entre otros.'),
@@ -58,8 +58,8 @@ VALUES
     (22, 'Otras actividades', 6, 55, 'domicilio-otros.jpg', 'Actividades y tareas que se realicen de forma cotidiana en el hogar: alimentación, ropa, limpieza y mantenimiento de la vivienda.')   
 ;
 
-/* -------------------------------- Tabla Imagenescarrousel -------------------------------- */
-INSERT INTO imagenescarrousel
+/* -------------------------------- Tabla Imagenescarousel -------------------------------- */
+INSERT INTO imagenescarousel
     (id, imagen, titulo, descripcion)
 VALUES
     (1, 'carrousel-comida.jpg', 'Dietas personalizadas', 'Nuestros expertos de la alimentación elaboran dietas sanas y equilibradas'),
@@ -70,8 +70,8 @@ VALUES
 ;
 
 /* -------------------------------- Tabla Usuarios -------------------------------- */
-INSERT INTO usuarios
-    (id, nombre, telefono, direccion, dni, tipo, acreditacion, contrasenya, imagen)
+INSERT INTO users
+    (id, name, mobilephone, address, dni, type, acreditation, password, image, email)
 VALUES
     /* Suposiciones: //REVIEW
         1) Tipo 1 son administradores, tipo 2 usuarios normales, tipo 3 proveedores. Igual hace falta comprobar a nivel de aplicación que los proveedores introduzcan acreditación al darse de alta. 
@@ -79,18 +79,17 @@ VALUES
         3) Las contraseñas de prueba son el MD5 del username. Sacado de este generador de hash MD5: https://www.miraclesalad.com/webtools/md5.php
         4) Faltaría crear un campo en la tabla para distinguir entre nombre (de username) y nombre (de nombre completo).
     */
-    (1, 'admin', 616666666, 'N/A', '11111111A', 1, null, '21232f297a57a5a743894a0e4a801fc3', '.jpg'),
-    (2, 'Gregor Samsa', 697821544, '27576 Fordem Terrace', '36981294P', 3, 'ACREDITACION-del-2', '3135f7b3f6b5dc80cf89b6a7bb22b36e', '.jpg'),
-    (3, 'Ignatius J. Reilly', 678951535, '695 Commercial Park', '97652371B', 3, 'otra-acreditacion', '0ea342aa78b6b4112f144184a37cb299', '.png'),
-    (4, 'Abuelete García', 689742178, '295 Towne Alley', '16547893F', 2, null, '4aab69d94495ca2741807e35f1a70a83', '.jpg'),
-    (5, 'Brian the Messiah', 698753215, '1234 Jerusalem', '98739124Z', 2, 'acreditacion-random', '23440c769ff2666d9561aa06e21720fc', '.png')
+    (1, 'admin', '616666666', 'N/A', '11111111A', 1, null, '21232f297a57a5a743894a0e4a801fc3', '.jpg', 'admin@test.com'),
+    (2, 'Gregor Samsa', '697821544', '27576 Fordem Terrace', '36981294P', 3, 'ACREDITACION-del-2', '3135f7b3f6b5dc80cf89b6a7bb22b36e', '.jpg', 'samsa@test.com'),
+    (3, 'Ignatius J. Reilly', '678951535', '695 Commercial Park', '97652371B', 3, 'otra-acreditacion', '0ea342aa78b6b4112f144184a37cb299', '.png', 'conjura@test.com'),
+    (4, 'Abuelete García', '689742178', '295 Towne Alley', '16547893F', 2, null, '4aab69d94495ca2741807e35f1a70a83', '.jpg', 'abuelete@test.com'),
+    (5, 'Brian the Messiah', '698753215', '1234 Jerusalem', '98739124Z', 2, 'acreditacion-random', '23440c769ff2666d9561aa06e21720fc', '.png', 'brian@test.com')
 ;
 
 /* -------------------------------- Tabla colaboradores  -------------------------------- */
 INSERT INTO colaboradores
     (id, nombre, imagen)
 VALUES
-    /* //TODO cambiar el campo en la BBDD a "id" (ahora mismo es "Id") */
     (1, 'Ajuntament de Mislata', 'colab-mislata.png'),
     (2, 'Asociación Amigos de la tercera edad', 'colab-amigos-3a-edad.jpg'),
     (3, 'Fundación por la memoria', 'colab-memoria.png'),
@@ -101,14 +100,13 @@ VALUES
                                     TABLAS DE RELACIONES
     ======================================================================================
 */
-/* -------------------------------- Tabla colabora -------------------------------- */
-INSERT INTO colabora
-    (idServicio, idColaborador)
+/* -------------------------------- Tabla colaborador_servicio -------------------------------- */
+INSERT INTO colaborador_servicio
+    (servicio_id, colaborador_id)
 VALUES
     /* Suposiciones: //REVIEW 
         1) Un servicio puede tener 0 o n colaboradores.
         2) Un colaborador puede colaborar en 0 o n servicios.
-        3) Yo añadiría también un id autoincremental para la tabla en sí como clave primaria.
     */
     (3, 1),
     (10, 2),
@@ -116,33 +114,23 @@ VALUES
     (3, 4)
 ;
 
-/* -------------------------------- Tabla compra -------------------------------- */
-INSERT INTO compra
-    (idServicio, idUsuario)
+/* -------------------------------- Tabla servicio_user -------------------------------- */
+INSERT INTO servicio_user
+    (servicio_id, user_id, tipo)
 VALUES
     /* Suposiciones: //REVIEW 
         Las mismas 3 que en la tabla colabora, y además:
         4) Un usuario de tipo proveedor puede también comprar servicios.
         5) Más adelante en esta tabla podríamos añadir campos de detalles de la compra (fecha, precio total, ...).
     */
-    (3, 3),
-    (10, 2),
-    (7, 5),
-    (6, 2),
-    (3, 5)
-;
-
-/* -------------------------------- Tabla provee -------------------------------- */
-INSERT INTO provee
-    (idServicio, idProveedor)
-VALUES
-    /* Suposiciones: //REVIEW 
-        Las mismas 3 que en la tabla colabora
-    */
-    (3, 1),
-    (1, 2),
-    (5, 2),
-    (7, 3),
-    (6, 3),
-    (3, 4)
+    (3, 3, 'provee'),
+    (10, 2, 'compra'),
+    (7, 5, 'compra'),
+    (6, 2, 'provee'),
+    (3, 5, 'compra'),
+    (3, 1, 'provee'),
+    (1, 2, 'compra'),
+    (5, 2, 'compra'),
+    (7, 3, 'provee'),
+    (6, 3, 'compra')
 ;
