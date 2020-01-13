@@ -6,12 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Servicios extends Model
 {
-    
+
     protected $table = 'servicios';
-    protected $fillable = ['nombre','idCategoria','precio','imagen','descripcion'];
+    protected $fillable = ['nombre','categoria_id','precio','imagen','descripcion'];
     public $timestamps = false;
 
     public function getServiciosPorCategoria($idCategoria){
-        return \DB::table('servicios')->where('idCategoria',$idCategoria)->get();
+        return \DB::table('servicios')->where('categoria_id',$idCategoria)->get();
     }
 }
