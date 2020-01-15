@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Categorias;
 use App\Servicios;
 
+
 class CategoriasController extends Controller
 {
     /**
@@ -16,9 +17,23 @@ class CategoriasController extends Controller
      */
     public function index()
     {
-        $data = Categorias::all();
+        $directorio = scandir(storage_path('app/public/categorias/'));
+        $bd = Categorias::all();
+        $data = array();
         $status = 404;
         $code = 'Categories Not Found';
+
+
+        for ($i=0; $i < count($bd); $i++) {
+            $contenidoValido['id'] = $bd[$i]['id'];
+            $contenidoValido['nombre'] = $bd[$i]['nombre'];
+            $contenidoValido['descripcion'] = $bd[$i]['descripcion'];
+            $contenidoValido['imagen'] = 'imagenotfoundcat.png';
+            if (in_array($bd[$i]['imagen'], $directorio)){
+                $contenidoValido['imagen'] = $bd[$i]['imagen'];
+                }
+            array_push($data, $contenidoValido);
+         }
 
         if ( count($data) !== 0 ) {
             $status = 200;
@@ -134,8 +149,6 @@ class CategoriasController extends Controller
             "code" => $code,
             "status" => $status
         ]);
-
-
     }
 
     /**
@@ -147,7 +160,6 @@ class CategoriasController extends Controller
     public function destroy($id)
     {
         $data = Categorias::find($id);
-
         $status = 404;
         $code = 'Category Not Deleted';
 
@@ -174,9 +186,28 @@ class CategoriasController extends Controller
     public function getServicios($idServicio){
         $servicio = new Servicios();
 
-        $data = $servicio->getServiciosPorCategoria($idServicio);
+        $directorio = scandir(storage_path('app/public/servicios/'));
+
+        $bd = $servicio->getServiciosPorCategoria($idServicio);
         $status = 404;
+        $data = array();
         $code = 'Services Not Found';
+
+        //como bd es un array de objetos, hay que acceder a los elementos de un objeto con foreach
+        foreach ($bd as $rows) {
+            $contenidoValido['id'] = $rows->id;
+            $contenidoValido['nombre'] = $rows->nombre;
+            $contenidoValido['idCategoria'] = $rows->categoria_id;
+            $contenidoValido['precio'] = $rows->precio;
+            $contenidoValido['descripcion'] = $rows->descripcion;
+            $contenidoValido['imagen'] = 'imagenotfoundserv.png';
+
+            if (in_array($rows->imagen, $directorio)){
+                $contenidoValido['imagen'] = $rows->imagen;
+            }
+
+            array_push($data, $contenidoValido);
+        }
 
         if ( count($data) !== 0 ) {
             $status = 200;

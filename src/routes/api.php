@@ -21,12 +21,9 @@ Route::resource('/categoria', 'CategoriasController');
 
 Route::get('/categoria/{idCategoria}/servicio', 'CategoriasController@getServicios');
 
-//La parte de abajo la está haciendo Iván
-Route::get('/carrusel', 'ImagenCarrusel@getImagenes');
+Route::resource('/carousel', 'CarouselController');
 
-Route::post('/carrusel', 'ImagenCarrusel@postImagen');
-
-
+Route::resource('/servicio', 'ServiciosController');
 
 Route::group([
     'prefix' => 'auth',

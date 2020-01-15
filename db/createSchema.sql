@@ -1,10 +1,10 @@
 
 -- -----------------------------------------------------
--- Schema dbeasylife
+-- Schema 
 -- -----------------------------------------------------
 
 -- -----------------------------------------------------
--- Schema dbeasylife
+-- Schema 
 -- -----------------------------------------------------
 CREATE SCHEMA IF NOT EXISTS `dbeasylife` DEFAULT CHARACTER SET utf8 ;
 USE `dbeasylife` ;
@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS `dbeasylife`.`Servicios` (
   INDEX `fk1_servicios_idx` (`idCategoria` ASC),
   CONSTRAINT `fk1_servicios`
     FOREIGN KEY (`idCategoria`)
-    REFERENCES `dbeasylife`.`Categorias` (`id`)
+    REFERENCES ``.`Categorias` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -69,12 +69,12 @@ CREATE TABLE IF NOT EXISTS `dbeasylife`.`Compra` (
   INDEX `fk2_compras_idx` (`idUsuario` ASC),
   CONSTRAINT `fk1_compras`
     FOREIGN KEY (`idServicio`)
-    REFERENCES `dbeasylife`.`Servicios` (`id`)
+    REFERENCES ``.`Servicios` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk2_compras`
     FOREIGN KEY (`idUsuario`)
-    REFERENCES `dbeasylife`.`Usuarios` (`id`)
+    REFERENCES ``.`Usuarios` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -90,12 +90,12 @@ CREATE TABLE IF NOT EXISTS `dbeasylife`.`Provee` (
   INDEX `fk2_provee_idx` (`idProveedor` ASC),
   CONSTRAINT `fk1_provee`
     FOREIGN KEY (`idServicio`)
-    REFERENCES `dbeasylife`.`Servicios` (`id`)
+    REFERENCES ``.`Servicios` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk2_provee`
     FOREIGN KEY (`idProveedor`)
-    REFERENCES `dbeasylife`.`Usuarios` (`id`)
+    REFERENCES ``.`Usuarios` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -122,12 +122,12 @@ CREATE TABLE IF NOT EXISTS `dbeasylife`.`Colabora` (
   INDEX `fk2_colabora_idx` (`idColaborador` ASC),
   CONSTRAINT `fk1_colabora`
     FOREIGN KEY (`idServicio`)
-    REFERENCES `dbeasylife`.`Servicios` (`id`)
+    REFERENCES ``.`Servicios` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk2_colabora`
     FOREIGN KEY (`idColaborador`)
-    REFERENCES `dbeasylife`.`Colaboradores` (`Id`)
+    REFERENCES ``.`Colaboradores` (`Id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
