@@ -35,12 +35,27 @@ class AuthController extends Controller
         $validation = $this->validateUser($request);
 
         if ( !$validation->fails() ) {
+
+            $time;
+            $extension;
+
+            if ($request->file('avatar') !== null ) {
+                $time = time();
+                $extension = '.'.explode('.', $request->file('avatar')->getClientOriginalName())[1];
+                $request->file('avatar')->storeAs('/public/avatars', 'avatar-'.$time.$extension);
+            } else {
+                $time = 'default';
+                $extension = '.png';
+            }
+            
+
             User::create([
                 'email' => $request->input('email'),
                 'name' => $request->input('name'),
                 'password' => Hash::make($request->input('password')),
                 'type' => $request->input('type'),
                 'dni' => $request->input('dni'),
+                'image' => 'avatar-'.$time.$extension
             ]);
 
             $credentials = request(['email', 'password']);
