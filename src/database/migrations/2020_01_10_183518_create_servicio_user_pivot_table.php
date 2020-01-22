@@ -24,8 +24,9 @@ class CreateServicioUserPivotTable extends Migration
             $table->index('servicio_id');
             $table->index('user_id');
             // Esta no hace falta internamente porque hemos seguido la convención de nomenclatura, pero está bien tenerla para dentro de la BBDD
-            $table->foreign('servicio_id')->references('id')->on('servicios');
-            $table->foreign('user_id')->references('id')->on('users');
+            // 'cascade' | 'no action' | 'restrict' | 'set null'
+            $table->foreign('servicio_id')->references('id')->on('servicios')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
         });
     }
 

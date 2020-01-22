@@ -16,7 +16,7 @@ class CreateServiciosTable extends Migration
         Schema::create('servicios', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('nombre', 45);
-            $table->unsignedBigInteger('categoria_id'); //NOTE nomenclatura convención Eloquent
+            $table->unsignedBigInteger('categoria_id')->nullable(); //NOTE nomenclatura convención Eloquent
             $table->decimal('precio', 5, 2);
             $table->string('imagen', 255);
             $table->text('descripcion');
@@ -24,7 +24,8 @@ class CreateServiciosTable extends Migration
             // Crear índice sobre la columna de la FK
             $table->index('categoria_id');
             // Esta no hace falta internamente porque hemos seguido la convención de nomenclatura, pero está bien tenerla para dentro de la BBDD
-            $table->foreign('categoria_id')->references('id')->on('categorias');
+            // 'cascade' | 'no action' | 'restrict' | 'set null'
+            $table->foreign('categoria_id')->references('id')->on('categorias')->onDelete('set null')->onUpdate('cascade');
         });
     }
 

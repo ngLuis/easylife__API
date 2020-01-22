@@ -22,8 +22,9 @@ class CreateColaboradorServicioPivotTable extends Migration
             $table->index('servicio_id');
             $table->index('colaborador_id');
             // Esta no hace falta internamente porque hemos seguido la convención de nomenclatura, pero está bien tenerla para dentro de la BBDD
-            $table->foreign('servicio_id')->references('id')->on('servicios');
-            $table->foreign('colaborador_id')->references('id')->on('colaboradores');
+            // 'cascade' | 'no action' | 'restrict' | 'set null'
+            $table->foreign('servicio_id')->references('id')->on('servicios')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('colaborador_id')->references('id')->on('colaboradores')->onDelete('cascade')->onUpdate('cascade');
         });
     }
 
