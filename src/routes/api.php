@@ -25,6 +25,8 @@ Route::resource('/carousel', 'CarouselController');
 
 Route::resource('/servicio', 'ServiciosController');
 
+Route::resource('/compra', 'CompraController');
+
 Route::group([
     'prefix' => 'auth',
 ], function () {
