@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Servicios;
+use App\Servicio;
+use App\Categoria;
 
-class ServiciosController extends Controller
+class ServicioController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,24 +17,38 @@ class ServiciosController extends Controller
     public function index()
     {
         $directorio = scandir(storage_path('app/public/servicios/'));
-        $bd = Servicios::all();
+        $servicios = Servicio::all();
         $data = array();
         $status = 404;
         $code = 'Services Not Found';
 
-        for ($i=0; $i < count($bd); $i++) {
-            $contenidoValido['id'] = $bd[$i]['id'];
-            $contenidoValido['nombre'] = $bd[$i]['nombre'];
-            $contenidoValido['idCategoria'] = $bd[$i]['categoria_id'];
-            $contenidoValido['precio'] = $bd[$i]['precio'];
-            $contenidoValido['descripcion'] = $bd[$i]['descripcion'];
+        foreach ($servicios as $servicio) {
+            $contenidoValido['id'] = $servicio['id'];
+            $contenidoValido['nombre'] = $servicio['nombre'];
+            $contenidoValido['idCategoria'] = $servicio['categoria_id'];
+            $contenidoValido['precio'] = $servicio['precio'];
+            $contenidoValido['descripcion'] = $servicio['descripcion'];
             $contenidoValido['imagen'] = 'imagenotfoundserv.png';
 
-            if (in_array($bd[$i]['imagen'], $directorio)){
-                $contenidoValido['imagen'] = $bd[$i]['imagen'];
+            if (in_array($servicio['imagen'], $directorio)){
+                $contenidoValido['imagen'] = $servicio['imagen'];
             }
             array_push($data, $contenidoValido);
         }
+
+        // for ($i=0; $i < count($bd); $i++) {
+        //     $contenidoValido['id'] = $bd[$i]['id'];
+        //     $contenidoValido['nombre'] = $bd[$i]['nombre'];
+        //     $contenidoValido['idCategoria'] = $bd[$i]['categoria_id'];
+        //     $contenidoValido['precio'] = $bd[$i]['precio'];
+        //     $contenidoValido['descripcion'] = $bd[$i]['descripcion'];
+        //     $contenidoValido['imagen'] = 'imagenotfoundserv.png';
+
+        //     if (in_array($bd[$i]['imagen'], $directorio)){
+        //         $contenidoValido['imagen'] = $bd[$i]['imagen'];
+        //     }
+        //     array_push($data, $contenidoValido);
+        // }
 
         if ( count($data) !== 0 ) {
             $status = 200;
@@ -76,7 +91,7 @@ class ServiciosController extends Controller
      */
     public function show($id)
     {
-        $data = Servicios::find($id);
+        $data = Categoria::find($id)->servicios();
 
         $status = 404;
         $code = 'Services Not Found';

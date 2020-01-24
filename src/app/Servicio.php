@@ -29,4 +29,9 @@ class Servicio extends Model
     {
         return $this->belongsToMany(Colaborador::class);
     }
+
+    //REVIEW -> traemos la funcion pero la funcion servicios() de categoria debe valer
+    public function getServiciosPorCategoria($idCategoria){
+        return \DB::table('servicios')->where('categoria_id',$idCategoria)->get();
+    }
 }

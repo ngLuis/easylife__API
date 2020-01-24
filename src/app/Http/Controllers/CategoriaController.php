@@ -4,11 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Categorias;
-use App\Servicios;
+use App\Categoria;
+use App\Servicio;
 
 
-class CategoriasController extends Controller
+class CategoriaController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,22 +18,22 @@ class CategoriasController extends Controller
     public function index()
     {
         $directorio = scandir(storage_path('app/public/categorias/'));
-        $bd = Categorias::all();
+        $categorias = Categoria::all();
         $data = array();
         $status = 404;
         $code = 'Categories Not Found';
 
-
-        for ($i=0; $i < count($bd); $i++) {
-            $contenidoValido['id'] = $bd[$i]['id'];
-            $contenidoValido['nombre'] = $bd[$i]['nombre'];
-            $contenidoValido['descripcion'] = $bd[$i]['descripcion'];
+        foreach ($categorias as $categoria) {
+            $contenidoValido['id'] = $categoria['id'];
+            $contenidoValido['nombre'] = $categoria['nombre'];
+            $contenidoValido['descripcion'] = $categoria['descripcion'];
             $contenidoValido['imagen'] = 'imagenotfoundcat.png';
-            if (in_array($bd[$i]['imagen'], $directorio)){
-                $contenidoValido['imagen'] = $bd[$i]['imagen'];
-                }
+
+            if (in_array($categoria['imagen'], $directorio)){
+                $contenidoValido['imagen'] = $categoria['imagen'];
+            }
             array_push($data, $contenidoValido);
-         }
+        }
 
         if ( count($data) !== 0 ) {
             $status = 200;
@@ -65,7 +65,7 @@ class CategoriasController extends Controller
      */
     public function store(Request $request)
     {
-        $data = new Categorias();
+        $data = new Categoria();
 
         $data->nombre = $request->input('nombre');
         $data->descripcion = $request->input('descripcion');
@@ -91,7 +91,7 @@ class CategoriasController extends Controller
      */
     public function show($id)
     {
-        $data = Categorias::find($id);
+        $data = Categoria::find($id);
 
         $status = 404;
         $code = 'Category Not Found';
@@ -128,7 +128,7 @@ class CategoriasController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $data = Categorias::find($id);
+        $data = Categoria::find($id);
 
         $status = 404;
         $code = 'Category Not Found';
@@ -159,7 +159,7 @@ class CategoriasController extends Controller
      */
     public function destroy($id)
     {
-        $data = Categorias::find($id);
+        $data = Categoria::find($id);
         $status = 404;
         $code = 'Category Not Deleted';
 
@@ -183,18 +183,16 @@ class CategoriasController extends Controller
         ]);
     }
 
-    public function getServicios($idServicio){
-        $servicio = new Servicios();
+    public function getServicios($idCategoria){
 
         $directorio = scandir(storage_path('app/public/servicios/'));
 
-        $bd = $servicio->getServiciosPorCategoria($idServicio);
+        $serviciosCategoria = Categoria::find($idCategoria)->servicios;
         $status = 404;
         $data = array();
         $code = 'Services Not Found';
 
-        //como bd es un array de objetos, hay que acceder a los elementos de un objeto con foreach
-        foreach ($bd as $rows) {
+        foreach ($serviciosCategoria as $rows) {
             $contenidoValido['id'] = $rows->id;
             $contenidoValido['nombre'] = $rows->nombre;
             $contenidoValido['idCategoria'] = $rows->categoria_id;

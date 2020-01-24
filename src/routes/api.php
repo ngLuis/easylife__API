@@ -17,13 +17,14 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::resource('/categoria', 'CategoriasController');
+Route::resource('/categoria', 'CategoriaController');
 
-Route::get('/categoria/{idCategoria}/servicio', 'CategoriasController@getServicios');
+Route::get('/categoria/{idCategoria}/servicio', 'CategoriaController@getServicios');
 
-Route::resource('/carousel', 'CarouselController');
 
-Route::resource('/servicio', 'ServiciosController');
+Route::resource('/carousel', 'ImagencarouselController');
+
+Route::resource('/servicio', 'ServicioController');
 
 Route::resource('/compra', 'CompraController');
 

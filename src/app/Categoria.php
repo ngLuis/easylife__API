@@ -19,6 +19,6 @@ class Categoria extends Model
      */
     public function servicios()
     {
-        return $this->hasMany(Servicio::class)->orderBy('created_at', 'DESC');
+        return $this->hasMany(Servicio::class);
     }
 }

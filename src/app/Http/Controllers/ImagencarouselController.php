@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Carousel;
+use App\Imagencarousel;
 
-class CarouselController extends Controller
+class ImagencarouselController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,7 +16,7 @@ class CarouselController extends Controller
     public function index()
     {
         $directorio = scandir(storage_path('app/public/carousel/'));
-        $bd = Carousel::all();
+        $bd = Imagencarousel::all();
         $data = array();
         $status = 404;
         $code = 'Images Not Found';
@@ -72,7 +72,7 @@ class CarouselController extends Controller
      */
     public function show($id)
     {
-        return Carousel::find($id);
+        return Imagencarousel::find($id);
     }
 
     /**
