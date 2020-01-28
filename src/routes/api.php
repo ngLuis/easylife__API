@@ -28,6 +28,10 @@ Route::resource('/servicio', 'ServicioController');
 
 Route::resource('/compra', 'CompraController');
 
+Route::resource('/carrito', 'CarritoController');
+
+Route::get('/user/{idUser}/carrito', 'CarritoController@getCarritoByUser');
+
 Route::group([
     'prefix' => 'auth',
 ], function () {
