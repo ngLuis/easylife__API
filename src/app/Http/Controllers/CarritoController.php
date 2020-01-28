@@ -15,7 +15,21 @@ class CarritoController extends Controller
      */
     public function index()
     {
-        //
+        $data = Carrito::all();
+
+        $status = 200;
+        $code = 'Cart rows found';
+
+        if ( count($data) === 0 ) {
+            $status = 404;
+            $code = 'Cart rows not found';
+        }
+
+        return response()->json([
+            "data" => $data,
+            "code" => $code,
+            "status" => $status
+        ]);
     }
 
     /**
