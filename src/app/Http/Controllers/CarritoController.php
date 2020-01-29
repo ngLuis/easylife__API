@@ -85,7 +85,6 @@ class CarritoController extends Controller
             "status" => $status
         ]);
 
-        return $data;
     }
 
     /**
@@ -119,7 +118,26 @@ class CarritoController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $data = Carrito::find($id);
+        $code = 404;
+        $status = 'Cart not found';
+
+        if ( $data !== null ) {
+            $code = 200;
+            $status = 'Cart updated';
+
+            $data->user_id = $request->input('user_id');
+            $data->estado = $request->input('estado');
+            $data->servicios = $request->input('servicios');
+
+            $data->save();
+        }
+
+        return response()->json([
+            "data" => $data,
+            "code" => $code,
+            "status" => $status
+        ]);
     }
 
     /**
