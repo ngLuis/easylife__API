@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Carrito;
+use App\CarritoServicio;
 
 class CarritoController extends Controller
 {
@@ -50,26 +51,54 @@ class CarritoController extends Controller
      */
     public function store(Request $request)
     {
-        $data = new Carrito();
-
-        $data->user_id = $request->input('user_id');
-        $data->estado = $request->input('estado');
-        $data->servicios = $request->input('servicios');
-
-        $data->save();
 
         $status = 200;
         $code = 'Cart created';
+        $cartData = null;
+
+        $cartServicesData = \DB::table('carritos')->where('user_id', $request->input('user_id'))->where('estado', 0);
+
+        if ( count($cartServicesData->get()) === 0 ) {
+            $cartData = new Carrito();
+
+            $cartData->user_id = $request->input('user_id');
+            $cartData->estado = $request->input('estado');
+
+            $cartData->save();
+
+            $servicios = $request->input('servicios');
+
+            foreach ($servicios as $servicio ) {
+                $cartServicesData = new CarritoServicio();
+                $cartServicesData->carrito_id = $cartData->id;
+                $cartServicesData->servicio_id = $servicio[0];
+                $cartServicesData->unidades = $servicio[1];
+                $cartServicesData->save();
+            }
+        } else {
+            $status = 409;
+            $code = 'There is other cart in process, please make a PUT method';
+        }
 
         return response()->json([
-            "data" => $data,
+            "data" => [
+                "cartData" => $cartData,
+            ],
             "code" => $code,
             "status" => $status
         ]);
     }
 
-    public function getCarritoByUser($id) {
-        $data = \DB::table('carritos')->where('user_id', $id)->get();
+    //SELECT fields FROM carrito_servicio INNER JOIN carritos INNER JOIN servicios ON carritos.id = carrito_servicio.id AND carrito_servicio.servicio_id = servicios.id WHERE estado = 0 AND carritos.user_id = idUsuario
+    public function getCarritoByUser($id, $estado) {
+
+        $data = \DB::table('carrito_servicio')
+        ->join('carritos', 'carritos.id', '=', 'carrito_servicio.carrito_id')
+        ->join('servicios', 'servicios.id', '=', 'carrito_servicio.servicio_id')
+        ->where('estado', $estado)
+        ->where('carritos.user_id',$id)
+        ->select('servicios.*', 'carrito_servicio.unidades', 'carritos.id AS cart_id')
+        ->get();
 
         $status = 404;
         $code = 'Cart Not Found';
@@ -118,23 +147,45 @@ class CarritoController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $data = Carrito::find($id);
+        $cartBD = Carrito::find($id);
         $code = 404;
         $status = 'Cart not found';
 
-        if ( $data !== null ) {
-            $code = 200;
-            $status = 'Cart updated';
+        if ( $cartBD !== null ) {
 
-            $data->user_id = $request->input('user_id');
-            $data->estado = $request->input('estado');
-            $data->servicios = $request->input('servicios');
+            if ( $cartBD->estado === 0 ) {
+                $code = 200;
+                $status = 'Cart updated';
 
-            $data->save();
+                CarritoServicio::where('carrito_id', $cartBD->id)->delete();
+
+                $serviciosInput = $request->input('servicios');
+                $serviciosDB = CarritoServicio::where('carrito_id', $cartBD->id);
+
+                foreach ($serviciosInput as $servicio ) {
+                    $serviciosDB = new CarritoServicio();
+                    $serviciosDB->carrito_id = $cartBD->id;
+                    $serviciosDB->servicio_id = $servicio[0];
+                    $serviciosDB->unidades = $servicio[1];
+                    $serviciosDB->save();
+                }
+
+                $estadoInput = $request->input('estado');
+
+                if ( $estadoInput !== 0 ) {
+                    $cartBD->estado = $estadoInput;
+                    $cartBD->save();
+                }
+
+            } else {
+                $code = 409;
+                $status = 'Cart status is closed';
+            }
+
         }
 
         return response()->json([
-            "data" => $data,
+            "data" => $cartBD,
             "code" => $code,
             "status" => $status
         ]);
