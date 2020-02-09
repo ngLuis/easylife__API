@@ -21,7 +21,7 @@ class CarritoController extends Controller
         $status = 200;
         $code = 'Cart rows found';
 
-        if ( count($data) === 0 ) {
+        if (count($data) === 0) {
             $status = 404;
             $code = 'Cart rows not found';
         }
@@ -58,7 +58,7 @@ class CarritoController extends Controller
 
         $cartServicesData = \DB::table('carritos')->where('user_id', $request->input('user_id'))->where('estado', 0);
 
-        if ( count($cartServicesData->get()) === 0 ) {
+        if (count($cartServicesData->get()) === 0) {
             $cartData = new Carrito();
 
             $cartData->user_id = $request->input('user_id');
@@ -68,7 +68,7 @@ class CarritoController extends Controller
 
             $servicios = $request->input('servicios');
 
-            foreach ($servicios as $servicio ) {
+            foreach ($servicios as $servicio) {
                 $cartServicesData = new CarritoServicio();
                 $cartServicesData->carrito_id = $cartData->id;
                 $cartServicesData->servicio_id = $servicio[0];
@@ -90,20 +90,21 @@ class CarritoController extends Controller
     }
 
     //SELECT fields FROM carrito_servicio INNER JOIN carritos INNER JOIN servicios ON carritos.id = carrito_servicio.id AND carrito_servicio.servicio_id = servicios.id WHERE estado = 0 AND carritos.user_id = idUsuario
-    public function getCarritoByUser($id, $estado) {
+    public function getCarritoByUser($id, $estado)
+    {
 
         $data = \DB::table('carrito_servicio')
-        ->join('carritos', 'carritos.id', '=', 'carrito_servicio.carrito_id')
-        ->join('servicios', 'servicios.id', '=', 'carrito_servicio.servicio_id')
-        ->where('estado', $estado)
-        ->where('carritos.user_id',$id)
-        ->select('servicios.*', 'carrito_servicio.unidades', 'carritos.id AS cart_id')
-        ->get();
+            ->join('carritos', 'carritos.id', '=', 'carrito_servicio.carrito_id')
+            ->join('servicios', 'servicios.id', '=', 'carrito_servicio.servicio_id')
+            ->where('estado', $estado)
+            ->where('carritos.user_id', $id)
+            ->select('servicios.*', 'carrito_servicio.unidades', 'carritos.id AS cart_id')
+            ->get();
 
         $status = 404;
         $code = 'Cart Not Found';
 
-        if ( count($data) !== 0 ) {
+        if (count($data) !== 0) {
             $status = 200;
             $code = 'Cart Found';
         }
@@ -113,7 +114,6 @@ class CarritoController extends Controller
             "code" => $code,
             "status" => $status
         ]);
-
     }
 
     /**
@@ -151,9 +151,9 @@ class CarritoController extends Controller
         $code = 404;
         $status = 'Cart not found';
 
-        if ( $cartBD !== null ) {
+        if ($cartBD !== null) {
 
-            if ( $cartBD->estado === 0 ) {
+            if ($cartBD->estado === 0) {
                 $code = 200;
                 $status = 'Cart updated';
 
@@ -162,7 +162,7 @@ class CarritoController extends Controller
                 $serviciosInput = $request->input('servicios');
                 $serviciosDB = CarritoServicio::where('carrito_id', $cartBD->id);
 
-                foreach ($serviciosInput as $servicio ) {
+                foreach ($serviciosInput as $servicio) {
                     $serviciosDB = new CarritoServicio();
                     $serviciosDB->carrito_id = $cartBD->id;
                     $serviciosDB->servicio_id = $servicio[0];
@@ -172,16 +172,14 @@ class CarritoController extends Controller
 
                 $estadoInput = $request->input('estado');
 
-                if ( $estadoInput !== 0 ) {
+                if ($estadoInput !== 0) {
                     $cartBD->estado = $estadoInput;
                     $cartBD->save();
                 }
-
             } else {
                 $code = 409;
                 $status = 'Cart status is closed';
             }
-
         }
 
         return response()->json([
@@ -199,6 +197,26 @@ class CarritoController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $data = Carrito::find($id);
+
+        if ($data === null) {
+            $status = 404;
+            $code = 'Carrito not found';
+        } else {
+            try {
+                $data->delete();
+                $status = 200;
+                $code = 'Carrito removed';
+            } catch (\Illuminate\Database\QueryException $exception) {
+                $status = 500;
+                $code = 'Server error trying to delete carrito';
+            }
+        }
+
+        return response()->json([
+            'data' => $data,
+            'status' => $status,
+            'code' => $code
+        ]);
     }
 }
