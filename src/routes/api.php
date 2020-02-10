@@ -26,6 +26,10 @@ Route::resource('/carousel', 'ImagencarouselController');
 
 Route::resource('/servicio', 'ServicioController');
 
+Route::post('/servicio/{idServicio}', 'ServicioController@patchService');
+
+Route::post('/categoria/{idCategoria}', 'CategoriaController@patchCategoria');
+
 Route::resource('/compra', 'CompraController');
 
 Route::resource('/carrito', 'CarritoController');

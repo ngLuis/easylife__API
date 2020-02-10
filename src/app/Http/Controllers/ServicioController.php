@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Servicio;
 use App\Categoria;
+use App\Http\Controllers\ImagesController;
 
 class ServicioController extends Controller
 {
@@ -35,20 +36,6 @@ class ServicioController extends Controller
             }
             array_push($data, $contenidoValido);
         }
-
-        // for ($i=0; $i < count($bd); $i++) {
-        //     $contenidoValido['id'] = $bd[$i]['id'];
-        //     $contenidoValido['nombre'] = $bd[$i]['nombre'];
-        //     $contenidoValido['idCategoria'] = $bd[$i]['categoria_id'];
-        //     $contenidoValido['precio'] = $bd[$i]['precio'];
-        //     $contenidoValido['descripcion'] = $bd[$i]['descripcion'];
-        //     $contenidoValido['imagen'] = 'imagenotfoundserv.png';
-
-        //     if (in_array($bd[$i]['imagen'], $directorio)){
-        //         $contenidoValido['imagen'] = $bd[$i]['imagen'];
-        //     }
-        //     array_push($data, $contenidoValido);
-        // }
 
         if ( count($data) !== 0 ) {
             $status = 200;
@@ -80,7 +67,30 @@ class ServicioController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $imageController = new ImagesController();
+
+        $data = new Servicio();
+
+        $status = 200;
+        $code = 'Cart created';
+        
+
+        $data->nombre = $request->input('nombre');
+        $data->categoria_id = $request->input('categoria_id');
+        $data->precio = $request->input('precio');
+        $data->descripcion = $request->input('descripcion');
+
+        $imagenName = $imageController->saveImage('/public/servicios', 'servicio', 'imagen', $request);
+
+        $data->imagen = $imagenName;
+
+        $data->save();
+
+        return response()->json([
+            "data" => $data,
+            "status" => $status,
+            "code" => $code
+        ]);
     }
 
     /**
@@ -128,7 +138,68 @@ class ServicioController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+
+        $imageController = new ImagesController();
+        
+        $data = Servicio::find($id);
+
+        $status = 404;
+        $code = 'Service Not Found';
+
+        if ( $data !== null ) {
+            $data->nombre = $request->input('nombre');
+            $data->categoria_id = $request->input('categoria_id');
+            $data->precio = $request->input('precio');
+            if ($request->input('imagen') !== null ) {
+                $imagenName = $imageController->saveImage('/public/servicios', 'servicio', 'imagen', $request);
+                $data->imagen = $imagenName;
+            }
+
+            $data->descripcion = $request->input('descripcion');
+
+            $data->save();
+
+            $status = 200;
+            $code = 'Success';
+        }
+
+        return response()->json([
+            "data" => $data,
+            "code" => $code,
+            "status" => $status
+        ]);
+    }
+
+    public function patchService(Request $request, $id) {
+
+        $imageController = new ImagesController();
+
+        $data = Servicio::find($id);
+
+        $status = 404;
+        $code = 'Service Not Found';
+
+        if ( $data !== null ) {
+            $data->nombre = $request->input('nombre');
+            $data->categoria_id = $request->input('categoria_id');
+            $data->precio = $request->input('precio');
+
+            $imagenName = $imageController->saveImage('/public/servicios', 'servicio', 'imagen', $request);
+            $data->imagen = $imagenName;
+
+            $data->descripcion = $request->input('descripcion');
+
+            $data->save();
+
+            $status = 200;
+            $code = 'Success';
+        }
+
+        return response()->json([
+            "data" => $data,
+            "code" => $code,
+            "status" => $status
+        ]);
     }
 
     /**
@@ -139,6 +210,21 @@ class ServicioController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $data = Servicio::find($id);
+
+        $status = 404;
+        $code = 'Services Not Found';
+
+        if ( $data !== null ) {
+            $data->delete();
+            $status = 200;
+            $code = 'Success';
+        }
+
+        return response()->json([
+            "data" => $data,
+            "code" => $code,
+            "status" => $status
+        ]);
     }
 }

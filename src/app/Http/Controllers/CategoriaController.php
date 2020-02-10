@@ -65,11 +65,16 @@ class CategoriaController extends Controller
      */
     public function store(Request $request)
     {
+        $imageController = new ImagesController();
+
         $data = new Categoria();
 
         $data->nombre = $request->input('nombre');
         $data->descripcion = $request->input('descripcion');
-        $data->imagen = $request->input('imagen');
+
+        $imagenName = $imageController->saveImage('/public/categorias', 'categoria', 'imagen', $request);
+
+        $data->imagen = $imagenName;
 
         $data->save();
 
@@ -142,6 +147,36 @@ class CategoriaController extends Controller
 
             $status = 200;
             $code = 'Category Updated';
+        }
+
+        return response()->json([
+            "data" => $data,
+            "code" => $code,
+            "status" => $status
+        ]);
+    }
+
+    public function patchCategoria(Request $request, $id) {
+
+        $imageController = new ImagesController();
+
+        $data = Categoria::find($id);
+
+        $status = 404;
+        $code = 'Service Not Found';
+
+        if ( $data !== null ) {
+            $data->nombre = $request->input('nombre');
+
+            $imagenName = $imageController->saveImage('/public/categorias', 'categoria', 'imagen', $request);
+            $data->imagen = $imagenName;
+
+            $data->descripcion = $request->input('descripcion');
+
+            $data->save();
+
+            $status = 200;
+            $code = 'Success';
         }
 
         return response()->json([
