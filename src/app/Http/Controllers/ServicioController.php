@@ -101,7 +101,7 @@ class ServicioController extends Controller
      */
     public function show($id)
     {
-        $data = Categoria::find($id)->servicios();
+        $data = Servicio::find($id);
 
         $status = 404;
         $code = 'Services Not Found';
