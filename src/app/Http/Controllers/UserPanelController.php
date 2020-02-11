@@ -17,7 +17,21 @@ class UserPanelController extends Controller
      */
     public function index()
     {
-        //
+        $data = UserPanel::all();
+
+        $code = 404;
+        $status = "Error there isn't users in the database";
+
+        if( $data !== null ){
+            $code = 200;
+            $status = "Success";
+        }
+
+        return response()->json([
+            "data" => $data,
+            "code" => $code,
+            "status" => $status
+        ]);
     }
 
     /**
@@ -49,7 +63,21 @@ class UserPanelController extends Controller
      */
     public function show($id)
     {
-        //
+        $data = UserPanel::find($id);
+
+        $status = 404;
+        $code = 'User Not Found';
+
+        if ( $data !== null ) {
+            $status = 200;
+            $code = 'Success';
+        }
+
+        return response()->json([
+            "data" => $data,
+            "code" => $code,
+            "status" => $status
+        ]);
     }
 
     /**
@@ -72,7 +100,7 @@ class UserPanelController extends Controller
      */
     public function update(Request $request, $id)
     {
-        
+
         $user = UserPanel::find($id);
     
         
@@ -105,6 +133,44 @@ class UserPanelController extends Controller
         }
     }
 
+    public function patchUser(Request $request, $id)
+    {
+
+        $user = UserPanel::find($id);
+        
+        if ($user !== null ){
+            $user->name = $request->input('name');
+            $user->dni = $request->input('dni');
+            $user->email = $request->input('email');
+            $pass = Hash::make($request->input('password'));
+            $user->password = $pass;
+            $user->mobilephone = $request->input('telefono');
+            $user->address = $request->input('direccion');
+
+            if ( $request->input('type') !== null ){
+                $user->type = $request->input('type');
+            }
+        
+            $user->update(); 
+
+            $status = 200;
+            $code = 'user updated';
+
+            return response()->json([
+                "code" => $code,
+                "status" => $status
+            ]);
+        } else {
+
+            $status = 404;
+            $code = 'Usuario no encontrado';
+            return response()->json([
+                "code" => $code,
+                "status" => $status
+            ]);
+        }
+    }
+
     /**
      * Remove the specified resource from storage.
      *
@@ -113,6 +179,7 @@ class UserPanelController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $data = UserPanel::find($id);
+        $data->delete();
     }
 }

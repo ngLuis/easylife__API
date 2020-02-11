@@ -17,5 +17,5 @@ class UserPanel extends Model
         'acreditation', 'password', 'address', 'dni', 'id', 'image', 'name', 'mobilephone', 'email', 'type'
     ];
 
-    public $timestamps= false;
+    public $timestamps= true;
 }

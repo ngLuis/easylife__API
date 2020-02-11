@@ -21,7 +21,6 @@ Route::resource('/categoria', 'CategoriaController');
 
 Route::get('/categoria/{idCategoria}/servicio', 'CategoriaController@getServicios');
 
-
 Route::resource('/carousel', 'ImagencarouselController');
 
 Route::resource('/servicio', 'ServicioController');
@@ -37,6 +36,8 @@ Route::resource('/carrito', 'CarritoController');
 Route::get('/user/{idUser}/carrito/estado/{estado}', 'CarritoController@getCarritoByUser');
 
 Route::resource('/userpanel', 'UserPanelController');
+
+Route::post('/userpanel/{id}', 'UserPanelController@patchUser');
 
 Route::group([
     'prefix' => 'auth',
