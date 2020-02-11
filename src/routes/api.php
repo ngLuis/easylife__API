@@ -36,6 +36,8 @@ Route::resource('/carrito', 'CarritoController');
 
 Route::get('/user/{idUser}/carrito/estado/{estado}', 'CarritoController@getCarritoByUser');
 
+Route::resource('/userpanel', 'UserPanelController');
+
 Route::group([
     'prefix' => 'auth',
 ], function () {
